@@ -4,6 +4,7 @@ import com.TekArch.TafFlightMicroService.Model.FlightsDTO;
 import com.TekArch.TafFlightMicroService.Services.Interface.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -60,16 +61,28 @@ public class FlightServiceImpl implements FlightService {
         }
     }
 
-    public void updateFLight(Long flightid, FlightsDTO flightdtls) {
-        String url = crudServiceUrl + "/" + flightid;
+    public FlightsDTO updateFlight(Long flightId, FlightsDTO flightDetails) {
+        String url = crudServiceUrl + "/" + flightId;
         try {
-            restTemplate.put(url, flightdtls);
-        } catch (HttpClientErrorException.NotFound e) {
-            throw new RuntimeException("Flight with ID " + flightid + " not found", e);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new RuntimeException("Failed to update FLight: " + e.getResponseBodyAsString(), e);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<FlightsDTO> requestEntity = new HttpEntity<>(flightDetails, headers);
+            ResponseEntity<FlightsDTO> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, FlightsDTO.class);
+            return response.getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().is4xxClientError()) {
+                throw new RuntimeException("Client error occurred: " + e.getResponseBodyAsString(), e);
+            } else {
+                throw new RuntimeException("Unexpected client error: " + e.getMessage(), e);
+            }
+        } catch (HttpServerErrorException e) {
+            if (e.getStatusCode().is5xxServerError()) {
+                throw new RuntimeException("Server error occurred: " + e.getResponseBodyAsString(), e);
+            } else {
+                throw new RuntimeException("Unexpected server error: " + e.getMessage(), e);
+            }
         } catch (Exception e) {
-            throw new RuntimeException("An unexpected error occurred while updating Flight", e);
+            throw new RuntimeException("Unexpected error occurred while updating flight", e);
         }
     }
 

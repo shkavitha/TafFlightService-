@@ -48,12 +48,23 @@ public class FlightController {
         }
     }
 
-    @PutMapping("/{flightid}")
-    public ResponseEntity<FlightsDTO> updateFlight(@PathVariable Long flightid, FlightsDTO flight) {
-        try {
-            flightServiceImpl.updateFLight(flightid, flight);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
+//    @PutMapping("/{flightid}")
+//    public ResponseEntity<FlightsDTO> updateFlight(@PathVariable Long flightid, FlightsDTO flight) {
+//        try {
+//            flightServiceImpl.updateFlight(flightid, flight);
+//            return ResponseEntity.noContent().build();
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(500).build();
+//        }
+//    }
+
+    @PutMapping("/{flightId}")
+    public ResponseEntity<FlightsDTO> updateFlight(@PathVariable Long flightId, @RequestBody FlightsDTO flightDetails)
+    {
+        try { FlightsDTO updatedFlight = flightServiceImpl.updateFlight(flightId, flightDetails);
+            return ResponseEntity.ok(updatedFlight); }
+        catch (RuntimeException e)
+        {
             return ResponseEntity.status(500).build();
         }
     }
