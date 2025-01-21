@@ -39,13 +39,13 @@ public class FlightServiceImpl implements FlightService {
     public Optional<FlightsDTO> getFlightById(Long flightid) {
         String url = crudServiceUrl + "/" + flightid;
         try {
-            return Optional.ofNullable(restTemplate.getForObject(url, FlightsDTO.class));
+            return Optional.ofNullable(restTemplate.getForObject(crudServiceUrl + "/" + flightid, FlightsDTO.class));
         } catch (HttpClientErrorException.NotFound e) {
-            throw new RuntimeException("User with ID " + flightid + " not found", e);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new RuntimeException("Failed to fetch flight: " + e.getResponseBodyAsString(), e);
+            // Return null when fligh is not found (404)
+            return null;
         } catch (Exception e) {
-            throw new RuntimeException("An unexpected error occurred while fetching user with ID " + flightid, e);
+            // Catch other exceptions and log them if necessary
+            throw new RuntimeException("Error while fetching flight with ID " + flightid, e);
         }
     }
 

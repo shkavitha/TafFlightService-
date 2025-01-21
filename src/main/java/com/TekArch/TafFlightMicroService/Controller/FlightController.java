@@ -29,10 +29,14 @@ public class FlightController {
     }
 
     @GetMapping("/{flightid}")
-    public ResponseEntity<FlightsDTO> getFlightById(@PathVariable Long flightid) {
+    public ResponseEntity<Optional<FlightsDTO>> getFlightById(@PathVariable Long flightid) {
         Optional<FlightsDTO> flight = flightServiceImpl.getFlightById(flightid);
-        return flight.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        if (flight == null) {
+            // Return 404 if user is not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        // Return 200 OK if user is found
+        return ResponseEntity.ok(flight);
     }
 
     @PostMapping("/addFlight")
