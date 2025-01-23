@@ -44,19 +44,10 @@ public class FlightController {
         try {
             return ResponseEntity.ok(flightServiceImpl.addFlight(flightobj));
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
     }
-
-//    @PutMapping("/{flightid}")
-//    public ResponseEntity<FlightsDTO> updateFlight(@PathVariable Long flightid, FlightsDTO flight) {
-//        try {
-//            flightServiceImpl.updateFlight(flightid, flight);
-//            return ResponseEntity.noContent().build();
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(500).build();
-//        }
-//    }
 
     @PutMapping("/{flightId}")
     public ResponseEntity<FlightsDTO> updateFlight(@PathVariable Long flightId, @RequestBody FlightsDTO flightDetails)
