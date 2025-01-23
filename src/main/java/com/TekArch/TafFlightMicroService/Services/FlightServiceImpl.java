@@ -51,7 +51,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     public FlightsDTO addFlight(FlightsDTO flight) {
-        String url = crudServiceUrl;
+        String url = crudServiceUrl+"/addFlight";
         try {
             return restTemplate.postForObject(url, flight, FlightsDTO.class);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
