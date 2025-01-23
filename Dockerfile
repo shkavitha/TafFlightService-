@@ -5,7 +5,7 @@ FROM 522814707388.dkr.ecr.us-east-2.amazonaws.com/java-image:17-jdk-slim
 WORKDIR /app
 
 # Copy the Spring Boot JAR file into the container
-COPY build/libs/TafFligthMS.jar app.jar
+COPY build/libs/TafFlightMS.jar app.jar
 
 # Expose the port your application runs on (optional but recommended)
 EXPOSE 8082
