@@ -19,7 +19,7 @@ configurations {
 	}
 }
 bootJar {
-	archiveFileName = 'TafFlightMS.jar'
+	archiveFileName ='TafFlightMS.jar'
 }
 
 
